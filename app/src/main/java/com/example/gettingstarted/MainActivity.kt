@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // create url (style + publishable key)
-        val key = "prj_test_pk_14ac943014633198dc4c7ba6bccc40bbab095f34"
+        val key = "<RADAR_PUBLISHABLE_KEY>"
         val style = "radar-default-v1"
         val styleURL = "https://api.radar.io/maps/styles/$style?publishableKey=$key"
 
