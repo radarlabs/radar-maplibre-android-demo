@@ -13,6 +13,8 @@ import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
+import org.maplibre.android.module.http.HttpRequestUtil
+import okhttp3.OkHttpClient
 
 // optional 
 import org.maplibre.android.plugins.annotation.SymbolManager
@@ -37,6 +39,17 @@ class MainActivity : AppCompatActivity() {
         // init MapLibre
         MapLibre.getInstance(this)
 
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val request = original.newBuilder()
+                    .header("X-Radar-Mobile-Origin", BuildConfig.APPLICATION_ID)
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+        HttpRequestUtil.setOkHttpClient(httpClient)
+
         // init layout view
         val inflater = LayoutInflater.from(this)
         val rootView = inflater.inflate(R.layout.activity_main, null)
@@ -54,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             // anchor attribution to bottom right
             map.uiSettings.attributionGravity = Gravity.RIGHT + Gravity.BOTTOM
             map.uiSettings.setAttributionMargins(0,0,24,24)
-
+            
             map.setStyle(styleURL) {style ->
                 val infoIconDrawable = ResourcesCompat.getDrawable(
                     this.resources,
